@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">	
+	<title>file upload</title>
+	<style type="text/css">
+	
+	</style>
+	<style type="text/javasctipt">
+
+	</style>
+</head>
+<body>
+<div>
+	<form enctype="multipart/form-data" action="/user/uploadform/" method="post">
+		{% csrf_token %}
+		{{ form }}
+		<input type="submit" value="submit">
+	</form>
+</div>
+</body>
+</html>

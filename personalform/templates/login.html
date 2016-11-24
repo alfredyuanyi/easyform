@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/static/css/semantic.min.css">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/static/js/semantic.min.js"></script>
+    <script type="text/javascript">
+	$(document).ready(function(){
+		$('.ui.form')
+	   			.form({
+	                on: 'blur',
+	                inline : true,
+	                fields: {
+	                    name: {
+	                        identifier: 'name',
+	                        rules: [
+	                        {
+	                            type: 'empty',
+	                            prompt: '邮箱不能为空',
+	                        }
+	                        ]
+	                    },
+	                    password: {
+	                        identifier: 'password',
+	                        rules: [
+	                        {
+	                            type: 'empty',
+	                            prompt: '密码不能为空',
+	                        }
+	                        ]
+	                    },
+	                    province: {
+	                        identifier: 'province',
+	                        rules: [{
+	                            type: 'empty',
+	                            prompt: '请选择省份'
+	                        }]
+	                    }
+	                }
+	            });
+        // $('.ui.button.fluid').click(function(){
+        //     var a = $('.ui.form').form('is valid');
+        //     $('.ui.icon.clicked.message').removeClass("hidden");
+        //     if(!a){
+        //         $('.ui.icon.clicked.message').addClass("hidden");
+        //     }else{
+        //         <!-- post数据 -->
+        //         $.ajax({
+        //             type : "POST",
+        //             url : "",
+        //             data : $('.ui.form').serialize(),
+        //             dataType : "json",
+        //             success : function(callBackData){
+        //                 $('.ui.icon.clicked.message').addClass("hidden");
+        //                 $('.ui.icon.positive.message').addClass("hidden");
+        //             },
+        //             error : function(data, staus, e){
+        //                 $('.ui.icon.clicked.message').addClass("hidden");
+        //                 $('.ui.icon.negative.message').removeClass("hidden");
+        //             }
+        //         })
+        //     }
+        // })
+	})
+	</script>
+</head>
+
+<body id="page" class="index pushable" ontouchstart>
+    <div class="pusher">
+        <div class="full height">
+            <div class="following bar light fixed inverted">
+                <div class="ui container">
+                    <div class="ui large secondary network menu inverted">
+                        <div class="item right">
+                            <div class="ui right">
+                               <!-- <a class="ui blue inverted button m-float" href="/user/index/">首页</a>-->                                
+                               <a class="ui blue inverted button m-float" href="/user/register/">注册</a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="article down">
+                <div class="ui container">
+                    <div class="introduction">
+                        <form class="ui form" action="/user/login/" method="post">
+                        {% csrf_token %}
+                            <div class="ui hidden divider"></div>
+                            <div class="field">
+                                <h2 class="ui center aligned icon header"><i class="circular users icon"></i> 登陆 </h2>
+                            </div>
+                            
+                            <div class="ui hidden divider"></div>
+                            <div class="field">
+                                {{ form.username.errors }}
+                                <div class="ui fluid input name">
+                                    <input type="text" name="username" placeholder="请输入用户名..">
+                                </div>
+                            </div>
+                            <div class="ui hidden divider"></div>
+                            <div class="field">
+                                {{ form.password.errors }}
+                                <div class="ui fluid action input password">
+                                    <input type="password" name="password" placeholder="请输入密码..">
+                                    <button class="ui button">忘记密码？</button>
+                                </div>
+                            </div>
+                            <div class="ui hidden divider"></div>
+                            <div class="field">
+                                <button type="submit" class="ui big primary button fluid">立即登陆</button>
+                            </div>
+                            <div class="ui icon message clicked hidden">
+                                <i class="notched circle loading icon"></i>
+                                <div class="content">
+                                    <div class="header">正在登陆 </div>
+                                    <p>请稍后......</p>
+                                </div>
+                            </div>
+                            <div class="ui icon positive message hidden">
+                                <i class="checkmark box icon"></i>
+                                <div class="content">
+                                    <div class="header">登录成功 </div>
+                                </div>
+                            </div>
+                            <div class="ui icon negative message hidden">
+                                <i class="warning sign icon"></i>
+                                <div class="content">
+                                    <div class="header">登录失败 </div>
+                                    <p>请检查网络后重试 </p>
+                                </div>
+                            </div>
+                            <div class="ui horizontal divider">第三方登陆</div>
+                        </form>
+                    </div>
+                </div>
+                <div class="footer">
+                    <div class="copyright">版权信息</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

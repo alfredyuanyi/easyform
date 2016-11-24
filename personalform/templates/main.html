@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="/static/css/semantic.min.css">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/basic.css">
+    <link rel="stylesheet" href="/static/css/dropzone.css">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/static/js/semantic.min.js"></script>
+    <!-- <script src="/static/js/dropzone.js"></script> -->
+	<script>
+   		$(window).scroll(function() {
+        var yheight1=window.pageYOffset; //滚动条距顶端的距离
+        var yheight=getScrollTop(); //滚动条距顶端的距离
+        var height =document.documentElement.clientHeight//浏览器可视化窗口的大小
+        var top=parseInt(yheight)+parseInt(height)-217;
+        var divobj=$(".kf");
+        divobj.attr('style','top:'+top+'px;');
+
+        if (!getScrollTop()) {
+        	$(".bar").removeClass("light");
+        	$(".bar").removeClass("fixed");
+        	$(".ui.large.secondary").addClass("inverted");
+        	$("a.ui.blue.inverted.button.m-float").removeClass("blue");
+        	$("a.ui.inverted.button.m-float").addClass("black");
+        }
+        else if (getScrollTop()) {
+        	$(".bar").addClass("light");
+        	$(".bar").addClass("fixed");
+        	$(".ui.large.secondary").removeClass("inverted");
+        	$("a.ui.black.inverted.button.m-float").removeClass("black");
+        	$("a.ui.inverted.button.m-float").addClass("blue");
+        }
+    	})
+    	function getScrollTop() {
+        var scrollPos;
+        if (window.pageYOffset) {
+        scrollPos = window.pageYOffset; }
+        else if (document.compatMode && document.compatMode != 'BackCompat')
+        { scrollPos = document.documentElement.scrollTop; }
+        else if (document.body) { scrollPos = document.body.scrollTop; }
+        return scrollPos;
+		}
+	</script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$('#page .menu .browse')
+            .popup({
+                inline: true,
+                hoverable: true,
+                position: 'bottom right',
+                delay: {
+                    show: 300,
+                    hide: 800
+                }
+            });
+
+            $('#button1').click(function(){
+                $('.ui.modal.excel')
+                .modal('scale')
+                .modal('show')
+                ;
+                $(".ui.modal1#dropz").dropzone({
+                    url: "",
+                    method: "POST",
+                    maxFiles: 5,
+                    maxFilesize: 10,//MB
+                    acceptedFiles: ".xls,.xlsx",//允许上传格式
+                    uplodeMultiple: false,
+                });
+            })
+            $('#button2').click(function(){
+                $('.ui.modal.word')
+                .modal('scale')
+                .modal('show')
+                ;
+                $(".ui.modal2#dropz").dropzone({
+                    url: "",
+                    method: "POST",
+                    maxFiles: 5,
+                    maxFilesize: 10,//MB
+                    acceptedFiles: ".xls,.xlsx",//允许上传格式
+                    uplodeMultiple: false,
+                });
+            })
+		})
+	</script>
+</head>
+<body id="page" class="index pushable" ontouchstart>
+	<div class="pusher">
+		<div class="full height">
+			<div class="following bar">
+				<div class="ui container">
+					<div class="ui large secondary inverted left network menu">
+						<div class="item"><i class="ui user icon"></i></div>
+						<div class="item right">
+							<div class="ui">
+								  {% if not user.is_authenticated %}
+                                <a class="ui blue inverted button m-float" href="/user/login/">登陆</a>
+                                <a class="ui blue inverted button m-float" href="/user/register/">注册</a>
+                                {% endif %}
+                                {% if user.is_authenticated %}
+                                <a class="ui blue inverted button m-float" href="/user/index/">{{ user.username }}</a>
+                                <a class="ui blue inverted button m-float" href="/user/usercenter/">个人中心</a>
+                                <a class="ui blue inverted button m-float" href="/user/logout/">退出登陆</a>
+                                {% endif %}
+								<!-- IF sign in -->
+								<a class="ui browse blue inverted button m-float " style="display: none">账号信息 <i class="dropdown icon"></i></a>
+								<div class="ui fluid popup top left transition">
+                        		    <div class="ui cards">
+                        		        <div class="card">
+                        		            <div class="content">
+                        		                <img class="right floated mini ui image" src="">
+                        		                <div class="header">账户名称 </div>
+                        		                <div class="meta">地址..... </div>
+                        		                <div class="extra content">
+                        		                    <div class="ui two buttons">
+                        		                        <div class="ui green button"><i class="user icon"></i>资料</div>
+                        		                        <div class="ui red button"><i class="sign out icon"></i>注销</div>
+                        		                    </div>
+                        		                </div>
+                        		            </div>
+                        		        </div>
+                        		    </div>
+                        		</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="masthead segment bg1">
+				<div class="ui container">
+					<div class="introduction">
+						<a class="ui black verson label " href="">vol.1</a>
+						<h1 class="ui inverted header">
+							<span class="library ">文档处理</span><br>
+							<span class="tagline ">线上处理Excel、Word文档</span>
+						</h1>
+						<div class="ui hidden divider"></div>
+						<a class="ui huge inverted button" id="button1">上传Excel</a>
+						<a class="ui huge inverted button" id="button2">上传Word</a>
+					</div>
+					<div class=""></div>
+				</div>
+			</div>
+			<div class="ui vertical stripe intro segment"></div>
+		</div>
+	</div>
+    <div class="ui modal excel">
+        <div id="dropz">
+            <div class="ui grid">
+                <div class="six wide column">
+                    <h2>温馨提示</h2>
+                    <div class="ui divider hidden"></div>
+                    <p><i class="mini circular inverted grey icon">1</i>请上传.xls或xlsx格式的文档</p>
+                    <p><i class="mini circular inverted grey icon">2</i>文档大小不要超过10MB</p>
+                    <p><i class="mini circular inverted grey icon">3</i>老旧的浏览器版本可能不支持拖拽上传</p>
+                </div>
+                <div class="ten wide column">
+                    <form class="dropzone needsclick dz-clickable" id="upload" enctype="multipart/form-data" action="/user/uploadform/excel/" method="post">
+                        {% csrf_token %} 
+                        <div class="dz-message needsclick">
+                            <i class="big inverted blue add circle icon"></i>
+                            <div class="ui divider hidden"></div>
+                            选择文件
+                            <input type="file" name="file" >
+                            <input type="submit" name="提交">
+                            拖拽文件上传或点击此处上传文档
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui modal word">
+        <div id="dropz">
+            <div class="ui grid">
+                <div class="six wide column">
+                    <h2>温馨提示</h2>
+                    <div class="ui divider hidden"></div>
+                    <p><i class="mini circular inverted grey icon">1</i>请上传.doc或docx格式的文档</p>
+                    <p><i class="mini circular inverted grey icon">2</i>文档大小不要超过10MB</p>
+                    <p><i class="mini circular inverted grey icon">3</i>老旧的浏览器版本可能不支持拖拽上传</p>
+                </div>
+                <div class="ten wide column">
+                    <form class="dropzone needsclick dz-clickable" id="upload" enctype="multipart/form-data" action="/user/uploadform/word/" method="post">
+                    {% csrf_token %} 
+                        <div class="dz-message needsclick">
+                            <i class="big inverted blue add circle icon"></i>
+                            <div class="ui divider hidden"></div>
+                            选择文件
+                            <input type="file" name="file" >
+                            <input type="submit" name="提交">
+                            拖拽文件上传或点击此处上传文档
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>

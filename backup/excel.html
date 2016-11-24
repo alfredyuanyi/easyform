@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/semantic.min.css">
+    <link rel="stylesheet" hrefhot1.getDataAtRow([])="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <link rel="stylesheet" href="/static/css/handsontable.full.min.css">
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/semantic.min.js"></script>
+    <script type="text/javascript" src="/static/js/handsontable.full.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+var _getData = []
+
+        $.each({% autoescape off %} {{ data }} {% endautoescape %}, function(name, value){
+        if (name === 'row_list'){
+          for(var i = 0; i < value.length; i++){
+        _getData.push([]);
+          for(var j = 0; j < value[i].length; j++){
+              _getData[i].push(value[i][j]);
+              }
+            }
+        }
+      })
+function updateData(){
+    var temp = {
+        filepath: '{{ filepath }}',
+        lines: hot1.countRows(),
+    }
+    for(var i = 0;i < hot1.countRows(); i++){
+        temp[i] = hot1.getDataAtRow([i]);
+        JSON.stringify(temp[i]);
+    }
+    return temp;
+}
+/*
+function updateData(){
+  var temp = [];
+  for(var i = 0; i < hot1.countRows(); i++){
+    if (hot1.getDataAtRow([i]).length != 0) {
+      temp.push([]);
+      temp[i].push(hot1.getDataAtRow([i]));
+    };
+  };
+  return temp;
+};*/
+var
+  $$ = function(id) {
+      return document.getElementById(id);
+  },
+  data = _getData,
+  //  data = [
+  //  ['学号', '姓名', '科研竞赛', '具体加分计算明细', '学科竞赛（20%）','科研情况(10%)', '文体竞赛（5%）', '社会工作', '加分明细（职位）', '能力分', '能力分明细（按照学生手册）'],
+  //  ['xx', 'xx', '41.4', '', '美国大学生数学建模竞赛一等奖，50','省级以上期刊排名第一，40', '省级比赛第一名，10', '15', '班级学习委员', '', '一次通过6级，XX分：通过计算机二级，XX分']
+  //  ],
+  /*        Data传输        */
+  container1 = $$('table_1'),
+  exampleConsole = $$('console'),
+  autosave = $$('autosave'),
+  load = $$('load'),
+  save = $$('save'),
+  searchFiled = $$('prompt'),
+  output = $$('output'),
+  autosaveNotification,
+  hot1;
+
+hot1 = new Handsontable(container1, {
+  data: data,
+  startRows: 8,
+  startCols: 6,
+  autoWrapRow: true,
+  rowHeaders: true,
+  colHeaders: true,
+  manualColumnMove: true,
+  manualRowMove: true,
+  manualColumnResize: true,
+  manualRowResize: true,
+  contextMenu: true,
+  persistentState: true,
+  stretchH: 'none',
+  search: true,
+  /*     多格合并     */
+  mergeCells: [
+    {}
+  ],
+    afterChange: function (change, source) {
+    if (source === 'loadData') {
+      return; //don't save this change
+    }
+    if (!autosave.checked) {
+      return;
+    }
+    clearTimeout(autosaveNotification);
+    $.ajax({
+      url: '/user/updateinfo/excel/',
+      type: 'POST',
+      data: updateData(),
+      dataType: 'json',
+      traditional: true,
+      async: true,
+      success: function (data) {
+        //exampleConsole.innerText  = 'Autosaved (' + change.length + ' ' + 'cell' + (change.length > 1 ? 's' : '') + ')';
+        autosaveNotification = setTimeout(function() {
+          //exampleConsole.innerText ='改动将自动保存';
+        }, 1000);
+      }
+    })
+  }
+});
+
+Handsontable.Dom.addEvent(save, 'click', function() {
+  // save all cell's data
+  $.ajax({
+    url: '/user/updateinfo/excel/',
+    type: 'POST',
+    data: {filepath: '{{ filepath }}',row_list:updateData()},
+    dataType: 'json',
+    async: true,
+  });
+});
+Handsontable.Dom.addEvent(output, 'click', function() {
+  // save all cell's data
+  //console.log(updateData());
+  // $.ajax({
+  //     url: "/user/downloadform/",//传输目标
+  //     type: 'POST',
+  //     // data: {filepath: '{{ filepath }}',row_list:updateData()},
+  //     //data: getData1,
+  //     dataType: 'json',
+  //     async: true
+  // })
+  // window.location.href='{{filepath}}'
+});
+Handsontable.Dom.addEvent(autosave, 'click', function() {
+  if (autosave.checked) {
+
+    //exampleConsole.innerText = '改动将自动保存';
+  }
+  else {
+    //exampleConsole.innerText ='改动将不会自动保存';
+  }
+});
+function onlyExactMatch(queryStr, value) {
+  return queryStr.toString() === value.toString();
+}
+
+Handsontable.Dom.addEvent(searchFiled, 'keyup', function (event) {
+    var queryResult = hot1.search.query(this.value);
+
+    console.log(queryResult);
+    hot1.render();
+});
+
+
+        // ************************************************************************
+        $('#page .menu .browse')
+            .popup({
+                inline: true,
+                hoverable: true,
+                position: 'bottom right',
+                delay: {
+                    show: 300,
+                    hide: 800
+                }
+            });
+        $('.ui.secondary.vertical.large.menu .item').click(function() {
+            $(this).parent().children().removeClass("active");
+            $(this).addClass("active");
+        })
+        $('.ui.vertical.inverted.sticky.fixed.icon.menu .toggle.button').click(function() {
+            $('.ui.left.vertical.menu.sidebar')
+                .sidebar('setting', 'transition', 'overlay', '.toggle.button')
+                .sidebar('toggle');
+        })
+        $('.toggle.button')
+            .removeClass('disabled');
+        $('.ui.dropdown.icon.item').dropdown();
+    })
+    </script>
+</head>
+
+<body id="page" class="index pushable" ontouchstart>
+
+    <div class="pusher">
+        <div class="full height">
+            <div class="ioc short">
+                <div class="ui vertical inverted sticky fixed icon menu" id="ioc" style="left: 0px;top: 0px;width: 50px !important;height: 1813px !important;">
+                    <div class="item">
+                        <a href="/user/index/"><i class="users icon"></i></a>
+                    </div>
+                    <a class="item resources" href="/user/userinfo/"> <i class="block layout icon"></i>
+                    </a>
+                    <a class="item toggle button">
+                        <i class="search icon"></i>
+                    </a>
+                    <a class="item">
+                        <rem>W</rem>
+                    </a>
+                    <a class="item active">
+                        <rem>E</rem>
+                    </a>
+                </div>
+            </div>
+            <div class="soc">
+                <div class="ui left vertical menu sidebar" style="left: 50px;top: 0px;width: 250px !important;height: 1813px !important;">
+                    <div class="item">
+                        <div class="ui transparent icon input">
+                            <input type="text" placeholder="请输入资源名...">
+                            <i class="search icon"></i>
+                        </div>
+                    </div>
+                    <div class="ui secondary vertical large menu">
+                        <!-- 此处搜索资源 -->
+                        <a class="item">资源1 </a>
+                        <a class="item">资源2 </a>
+                        <a class="item">资源3 </a>
+                        <a class="item">资源4 </a>
+                        <a class="item">资源5 </a>
+                        <a class="item">资源6 </a>
+                    </div>
+                </div>
+            </div>
+            <div class="toc">
+                <div class="ui vertical sticky fixed menu" style="left: 50px;top: 0px;width: 250px !important;height: 1813px !important;">
+                    <div class="ui minimal menu item">
+                        <rem>存储资源列表</rem>
+                        <button class="ui button tiny">添加</button>
+                    </div>
+                    <div class="ui secondary vertical large menu">
+                        <a class="item">资源1 </a>
+                        <a class="item">资源2 </a>
+                        <a class="item">资源3 </a>
+                        <a class="item">资源4 </a>
+                        <a class="item">资源5 </a>
+                        <a class="item">资源6 </a>
+                    </div>
+                </div>
+            </div>
+            <div class="article">
+                <div class="ui menu">
+                    <div class="right menu">
+                        <a href="/user/index/" class="ui item">主页 </a>
+                        <a class="ui browse item">账号信息 <i class="dropdown icon"></i></a>
+                        <div class="ui fluid popup top left transition">
+                            <div class="ui card">
+                                <div class="content">
+                                    <img class="right floated mini ui image" src="/static/images/steve.jpg">
+                                    <div class="header">账户名称 </div>
+                                    <div class="ui  divider"></div>
+                                    <div class="extra content">
+                                        <div class="ui two buttons">
+                                            <a class="ui basic button" href="/user/userinfo/">个人信息</a>
+                                            <a class="ui basic button" href="">资源总览</a>
+                                        </div>
+                                        <div class="ui hidden divider"></div>
+                                        <div class="ui two buttons">
+                                            <div class="ui green button"><i class="user icon"></i>资料</div>
+                                            <div class="ui red button"><i class="sign out icon"></i>注销</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="ui container">
+                    <div class="ui top attached menu">
+                        <a id="save" class="item">保存... </a>
+                        <a id="output" class="item" href="/user/downloadform/?filepath={{filepath}}">导出 </a>
+                        <div class="item">
+                        	<div class="ui slider checkbox">
+						  		<input type="checkbox" name="autosave"  id="autosave" autocomplete="off" checked="checked">
+						  		<label>自动保存</label>
+							</div>
+                        </div>
+                        <div class="right menu">
+                            <div class="ui right aligned category search item">
+                                <div class="ui transparent icon input">
+                                    <input id="prompt" class="prompt" type="text" placeholder="搜寻内容...">
+                                    <i class="search link icon"></i>
+                                </div>
+                                <div class="results"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div  id="table_1" class="handsontable ui bottom attached segment">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+

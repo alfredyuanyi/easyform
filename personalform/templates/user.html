@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/semantic.min.css">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/static/js/semantic.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function() {
+        $('#page .menu .browse')
+            .popup({
+                inline: true,
+                hoverable: true,
+                position: 'bottom right',
+                delay: {
+                    show: 300,
+                    hide: 800
+                }
+            });
+        $('.ui.secondary.vertical.large.menu .item').click(function() {
+            $(this).parent().children().removeClass("active");
+            $(this).addClass("active");
+        })
+        $('.ui.vertical.inverted.sticky.fixed.menu .toggle.button').click(function() {
+            $('.ui.left.vertical.menu.sidebar')
+                .sidebar('setting', 'transition', 'overlay', '.toggle.button')
+                .sidebar('toggle');
+        })
+        $('.toggle.button')
+            .removeClass('disabled');
+    })
+    </script>
+</head>
+
+<body id="page" class="index pushable" ontouchstart>
+    <div class="pusher">
+        <div class="full height">
+            <div class="ioc long">
+                <div class="ui vertical inverted sticky fixed menu" id="ioc" style="left: 0px;top: 0px;width: 200px !important;height: 1813px !important;">
+                    <div class="item">
+                        <i class="users icon"><a href="main.html"></a></i>
+                    </div>
+                    <a class="item" href="user.html">
+                        <i class="block layout icon"></i>资源主页
+                    </a>
+                    <a class="item toggle button">
+                        <i class="search icon"></i>搜索资源
+                    </a>
+                    <a class="item">
+                        <rem>W </rem>Word文件处理
+                    </a>
+                    <a class="item">
+                        <rem>E </rem>Excel文件处理
+                    </a>
+                </div>
+            </div>
+            <div class="soc">
+                <div class="ui left vertical menu sidebar" style="left: 50px;top: 0px;width: 250px !important;height: 1813px !important;">
+                    <div class="item">
+                        <div class="ui transparent icon input">
+                            <input type="text" placeholder="请输入资源名...">
+                            <i class="search icon"></i>
+                        </div>
+                    </div>
+                    <div class="ui secondary vertical large menu">
+                        <!-- 此处搜索资源 -->
+                        <a class="item">资源1 </a>
+                        <a class="item">资源2 </a>
+                        <a class="item">资源3 </a>
+                        <a class="item">资源4 </a>
+                        <a class="item">资源5 </a>
+                        <a class="item">资源6 </a>
+                    </div>
+                </div>
+            </div>
+            <div class="article">
+                <div class="ui menu">
+                    <div class="right menu">
+                        <a href="/user/index/" class="ui item">主页 </a>
+                        <a class="ui browse item">账号信息 <i class="dropdown icon"></i></a>
+                        <div class="ui fluid popup top left transition">
+                            <div class="ui card">
+                                <div class="content">
+                                    <img class="right floated mini ui image" src="images/steve.jpg">
+                                    <div class="header">账户名称 </div>
+                                    <div class="ui  divider"></div>
+                                    <div class="extra content">
+                                        <div class="ui two buttons">
+                                            <a class="ui basic button" href="/user/userinfo/">个人信息</a>
+                                            <a class="ui basic button" href="">资源总览</a>
+                                        </div>
+                                        <div class="ui hidden divider"></div>
+                                        <div class="ui two buttons">
+                                            <div class="ui green button"><i class="user icon"></i>资料</div>
+                                            <div class="ui red button"><i class="sign out icon"></i>注销</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 此处ajax -->
+				<div class="ui container">
+					<div class="ui container">
+					    <h1 class="ui header">添加资源</h1>
+					    <div class="sub header">					欢迎使用，在这里您可以方便快捷的访问您储存的各类资源，通过简单操作便可以完成对相关资源的配置监控和管理。</div>
+					    <div class="ui container">
+					        <h3 class="ui header">官方资源</h3>
+					        <div class="ui cards">
+					            <div class="card">
+					                <div class="content">
+					                    <div class="header">样本储存</div>
+					                    <div class="description">您可以将您需要处理的文件进行上传储存，作为文件处理的样本。 </<div>					</div>>
+					                </div>
+					                <a class="ui bottom attached button"><i class="add icon"></i>立即添加 </a>
+					            </div>
+					            <div class="card">
+					                <div class="content">
+					                    <div class="header">Word文件处理</div>
+					                    <div class="description">线上处理Word文档 </div>
+					                </div>
+					                <a class="ui bottom attached button"><i class="add icon"></i>立即添加 </a>
+					            </div>
+					            <div class="card">
+					                <div class="content">
+					                    <div class="header">Excel文件处理</div>
+					                    <div class="description">线上处理Excel文档 </div>
+					                </div>
+					                <a class="ui bottom attached button"><i class="add icon"></i>立即添加 </a>
+					            </div>
+					        </div>
+					    </div>
+					</div>
+				</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

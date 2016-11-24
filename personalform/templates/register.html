@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/semantic.min.css">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/home.css">
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/static/js/semantic.min.js"></script>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		// $.fn.form.settings.rules["checkUsername"] = function(value){
+  //           var url = "";<!-- 此处填写用户名检测url -->
+  //           var res = true;     //如果为true则提示已存在此邮箱
+  //           $.ajax({
+  //               async: true,
+  //               url: url,
+  //               type: "POST",
+  //               data: {
+  //                   username: value
+  //               },
+  //               dataType: "json",
+  //               success: function(data){
+  //                   <!-- 检测用户名是否已存在 -->
+  //                   if (data['code']==1) {
+  //                       res = false;
+  //                   }else{
+  //                       res = true;
+  //                   }console.log(res);
+  //                   return res;
+  //               }
+  //           })
+  //       }
+        $('.ui.form')
+                .form({
+                    on : 'change',
+                    inline : true,
+                    delay : true,
+                    fields: {
+                        email: {
+                            identifier: 'email',
+                            rules: [
+                            {
+                                type: 'empty',
+                                prompt: '邮箱不能为空',
+                            },
+                            {
+                                type: 'email',
+                                prompt: '邮箱格式不正确',
+                            },
+                            // {
+                            //     type: 'checkUsername',
+                            //     prompt: '此邮箱已注册'
+                            // }
+                            ]
+                        },
+                        password: {
+                            identifier: 'password',
+                            rules: [
+                            {
+                                type: 'empty',
+                                prompt: '密码不能为空',
+                            },
+                            {
+                                type: 'minLength[6]',
+                                prompt: '密码不能少于6位',
+                            }
+                            ]
+                        },
+                        password_required: {
+                            identifier: 'password_required',
+                            rules: [
+                            {
+                                type: 'empty',
+                                prompt: '密码不能为空',
+                            },
+                            {
+                                type: 'match[password]',
+                                prompt: '前后密码不匹配'
+                            }]
+                        }/*,
+                        province: {
+                            identifier: 'province',
+                            rules: [{
+                                type: 'empty',
+                                prompt: '请选择省份'
+                            }]
+                        },
+                        city: {
+                            identifier: 'city',
+                            rules: [{
+                                type: 'empty',
+                                prompt: '请选择市区'
+                            }]
+                        },
+                        newsletter: {
+                            identifier: 'newsletter',
+                            rules: [{
+                                type: 'checked',
+                                prompt: '您未同意条款'
+                            }]
+                        }*/
+                    }
+                });
+			 // $('.ui.button.fluid').click(function(){
+	   //         var a = $('.ui.form').form('is valid');
+	   //         $('.ui.icon.clicked.message').removeClass("hidden");
+	   //         if(!a){
+	   //             $('.ui.icon.clicked.message').addClass("hidden");
+	   //         }else{
+	   //             <!-- post数据 -->
+	   //             $.ajax({
+	   //                 type : "POST",
+	   //                 url : "",
+	   //                 data : $('.ui.form').serialize(),
+	   //                 dataType : "json",
+	   //                 success : function(callBackData){
+	   //                     $('.ui.icon.clicked.message').addClass("hidden");
+	   //                     $('.ui.icon.positive.message').addClass("hidden");
+	   //                 },
+	   //                 error : function(data, staus, e){
+	   //                     $('.ui.icon.clicked.message').addClass("hidden");
+	   //                     $('.ui.icon.negative.message').removeClass("hidden");
+	   //                 }
+	   //             })
+	   //         }
+	   //     })
+	    /*
+	    $('#search-select1').dropdown();
+	    $('#search-select2').dropdown();*/
+	})
+	</script>
+
+</head>
+
+<body id="page" class="index pushable dimmable" ontouchstart>
+    <div class="pusher">
+        <div class="full height">
+            <div class="following bar light fixed inverted">
+                <div class="ui container">
+                    <div class="ui large secondary inverted left network menu">
+                        <div class="item">
+                            <div class="ui logo shape">
+                                <div class="sides">
+                                    <div class="active ui side">
+                                        <!-- Logo -->Logo
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="view-ui item" id="menuIcon" data-transition="push"><i class="sidebar icon"></i>菜单</a>
+                        <div class="item right">
+                            <div class="ui">
+                                <a class="ui blue inverted button m-float" href="/user/login/">登陆</a>
+                                <a class="ui blue inverted button m-float" href="/user/register/">注册</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="article down">
+                <div class="ui container">
+                    <div class="introduction">
+                        <form class="ui form" action="/user/register/" method="post">
+                        	 {% csrf_token %} 
+                            <div class="ui horizontal divider"><i class="user icon"></i>
+                            	 {% if form.errors %}
+                                    <p style="color: red;"> 请修改下列错误</p>
+                                {% endif %} 
+                                <br>注册</div>
+                                <div class="field">
+                                  {{ form.username.errors }}
+                                <label>用户名</label>
+                                <input type="text" name="username" placeholder="请输入用户名" value="">
+
+                            </div>
+                            <div class="field">
+                                {{ form.email.errors }}
+                                <label>注册邮箱</label>
+                                <input type="email" name="email" placeholder="请输入邮箱" value="">
+
+                            </div>
+                            <div class="field">
+                                 {{ form.password.errors }}
+                                <label>密码</label>
+                                <input type="password" name="password" placeholder="请输入密码" value="" id="password">
+                            </div>
+                            <div class="field">
+                                 {{ form.checkpassword.errors }} 
+                                <label>确认密码</label>
+                                <input type="password" name="checkpassword" placeholder="请再次输入密码" value="" id="password_required">
+                            </div>
+                            <!-- <div class="fifth wide field">
+                                <label>地址</label>
+                                <div class="two fields">
+                                    <div class="field">
+                                        <div class="ui search selection dropdown" id="search-select1">
+                                            <input type="hidden" name="province" value="">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">-- 请选择省份 --</div>
+                                            <div class="menu">
+                                                <div class="item" data-value="1">北京市</div>
+                                                <div class="item" data-value="2">浙江省</div>
+                                                <div class="item" data-value="3">天津市</div>
+                                                <div class="item" data-value="4">安徽省</div>
+                                                <div class="item" data-value="5">上海市</div>
+                                                <div class="item" data-value="6">福建省</div>
+                                                <div class="item" data-value="7">重庆市</div>
+                                                <div class="item" data-value="8">江西省</div>
+                                                <div class="item" data-value="9">山东省</div>
+                                                <div class="item" data-value="10">河南省</div>
+                                                <div class="item" data-value="11">湖北省</div>
+                                                <div class="item" data-value="12">湖南省</div>
+                                                <div class="item" data-value="13">广东省</div>
+                                                <div class="item" data-value="14">海南省</div>
+                                                <div class="item" data-value="15">山西省</div>
+                                                <div class="item" data-value="16">青海省</div>
+                                                <div class="item" data-value="17">江苏省</div>
+                                                <div class="item" data-value="18">辽宁省</div>
+                                                <div class="item" data-value="19">吉林省</div>
+                                                <div class="item" data-value="20">台湾省</div>
+                                                <div class="item" data-value="21">河北省</div>
+                                                <div class="item" data-value="22">贵州省</div>
+                                                <div class="item" data-value="23">四川省</div>
+                                                <div class="item" data-value="24">云南省</div>
+                                                <div class="item" data-value="25">陕西省</div>
+                                                <div class="item" data-value="26">甘肃省</div>
+                                                <div class="item" data-value="27">黑龙江省</div>
+                                                <div class="item" data-value="28">香港特别行政区</div>
+                                                <div class="item" data-value="29">澳门特别行政区</div>
+                                                <div class="item" data-value="30">广西壮族自治区</div>
+                                                <div class="item" data-value="31">宁夏回族自治区</div>
+                                                <div class="item" data-value="32">新疆维吾尔自治区</div>
+                                                <div class="item" data-value="33">内蒙古自治区</div>
+                                                <div class="item" data-value="34">西藏自治区</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui search selection dropdown" id="search-select2">
+                                            <input type="hidden" name="city" value="">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">-- 请选择市区 --</div>
+                                            <div class="menu">
+                                                <div class="item" data-value="a">0</div>
+                                                <div class="item" data-value="b">1</div>
+                                                <div class="item" data-value="c">2</div>
+                                                <div class="item" data-value="d">3</div>
+                                                <div class="item" data-value="e">4</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> -->
+                            <!-- <div class="ui hidden divider"></div>
+                            <div></div>
+                            <div class="ui hidden divider"></div>
+                            <div class="field">
+                                <div class="ui slider checkbox">
+                                    <input type="checkbox" tabindex="0" name="newsletter">
+                                    <label>我同意以上条款（先填上，有没有用再说）</label>
+                                </div>
+                            </div> -->
+                            <div class="ui hidden divider"></div>
+                            <button type="submit" class="ui primary button fluid"> 注册 </button>
+                            <!-- <button type="submit" class="ui green fluid"> <i class="checkmark icon"></i> </button> -->
+                            <div class="ui icon message clicked hidden">
+                                <i class="notched circle loading icon"></i>
+                                <div class="content">
+                                    <div class="header">请稍后 </div>
+                                    <p>我们正在为您注册</p>
+                                </div>
+                            </div>
+                            <div class="ui icon positive message hidden">
+                                <i class="checkmark box icon"></i>
+                                <div class="content">
+                                    <div class="header">您已成功注册 </div>
+                                    <p>请到 <b>个人信息</b>页面完善信息 </p>
+                                </div>
+                            </div>
+                            <div class="ui icon negative message hidden">
+                                <i class="warning sign icon"></i>
+                                <div class="content">
+                                    <div class="header">注册出现了问题 </div>
+                                    <p>请检查网络后重试 </p>
+                                </div>
+                            </div>
+                            <div class="ui error message"></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="footer">
+            		<div class="copyright">版权信息</div>
+            	</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
