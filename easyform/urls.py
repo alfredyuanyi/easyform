@@ -16,9 +16,9 @@ Including another URLconf
 import personalform.urls 
 from django.conf.urls import url, include
 from django.contrib import admin
-from personalform.views import Login
+from personalform.views import UserIndex
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^user/',include(personalform.urls)),
-    url(r'^$', Login),]
+    url(r'^$', UserIndex),]

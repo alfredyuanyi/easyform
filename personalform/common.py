@@ -2,6 +2,7 @@
 
 from personalform.models import *
 
+JSON_PATH = 'middle.json'
 '''
 excel_data type: list
 '''
@@ -35,6 +36,16 @@ def create_and_update_field(username, excel_data):
 		pass
 	pass
 
+def get_info_word(username, word_info):
+	result_data = {}
+	for key in wordinfo.keys():
+		try:
+			result_data[word_info[key]] = WordInfo.objects.get(username = username, word_field = word_info[key]).word_value
+			pass
+		except WordInfo.DoesNotExist:
+			result_data[word_info[key]] = ''
+	return result_data
+	pass
 
 
 

@@ -15,6 +15,8 @@ from excelinfo import excel_to_python
 from common import *
 from fillexcel import *
 #
+JAR_PATH = 'workspace/java/'
+JAR_NAME = 'Word.jar'
 
 def file_iterator(filename, chunk_size=512):
 	with open(filename) as f:
@@ -158,7 +160,7 @@ def UserCenter(request):
         pass
 
 def handle_uploaded_file(f, filepath):
-    with open(filepath, 'wb+') as destination:
+    with open(filepath, 'wb') as destination:
         for chunk in f.chunks():
             destination.write(chunk)
 
@@ -169,7 +171,7 @@ def UploadForm(request, filetype):
 		    	file_path = MEDIA_URL + request.FILES['file'].name
 			handle_uploaded_file(request.FILES['file'], file_path)
 			user_data = get_user_data(username = request.user.username)
-			print user_data
+			# print user_data
 			excel_json = excel_to_python(fname=file_path, key = user_data)
 			print excel_json
 			return render(request, 
@@ -181,11 +183,19 @@ def UploadForm(request, filetype):
 		    	form = UploadFileForm(request.POST, request.FILES)
 		    	file_path = MEDIA_URL + request.FILES['file'].name
 			handle_uploaded_file(request.FILES['file'], file_path)
-			excel_json = excel_to_python(fname=file_path)
-			print excel_json
+			flag = os.system('cd ' + JAR_PATH + '&& ' + 'java -jar ' + JAR_NAME + ' "Read" "' + file_path + '"')
+			if flag != 0:
+				return HttpResponse("server error!")
+			json_class = json.JSONDecoder()
+			# here has some problems, if lots of user request this method, maybe ...
+			info = ''
+			with open(JAR_PATH + 'middle.json', 'r') as f:
+				info += f.read()
+			word_info = json_class.decode(info)
+			user_word_info = get_info_word(username = request.user.username, word_info = word_info)
 			return render(request, 
-				template_name = 'excel.html',
-				context = {'data': excel_json, 'filepath': file_path})
+				template_name = 'word.html',
+				context = {'data': user_word_info, 'filepath': file_path})
 			pass
 	else:
 			return Http404
@@ -214,17 +224,18 @@ def updateinfo(request, filetype):
 			exceldata = []
 			
 			data = dict(request.POST)
+			print data
 			lines = data['lines']
-			# print data
-			print int(lines[0])
+			merged = data['merged']
+			# print int(lines[0])
 			for x in xrange(0,int(lines[0])):
 				exceldata.append(data[str(x)])
 				pass
-			fill_info_to_excel(request.POST['filepath'], exceldata)
+			fill_info_to_excel(request.POST['filepath'], exceldata, merged)
 			
 			for line in xrange(1,int(lines[0])):
 				update_data = {}
-				print line
+				# print line
 				for index in xrange(0,len(data['0'])):
 					if data['0'][index] != '':
 						update_data[data[str(line)][0] + '_' + data['0'][index]] = data[str(line)][index]
@@ -232,7 +243,7 @@ def updateinfo(request, filetype):
 					else:
 						continue
 					pass
-				print 'update_data: ', update_data
+				# print 'update_data: ', update_data
 				create_and_update_field(request.user.username, excel_data = update_data)
 				pass
 			
@@ -241,6 +252,8 @@ def updateinfo(request, filetype):
 			pass
 		elif filetype == WORD_FILE:
 			# do something for word file update
+			worddata = dict(request.POST)
+			
 			return HttpResponse('succeed')
 		else:
 			return Http404
@@ -262,7 +275,8 @@ def UserIndex(request):
 			m_context = {'islogin': True}
 			return render(request, template_name = 'main.html', context=m_context)
 		else:
-			return redirect(to='/user/login/')
+			m_context = {'islogin': False}
+			return render(request, template_name = 'main.html', context=m_context)
 		pass
 	else:
 		return HttpResponse('illigal request method!')

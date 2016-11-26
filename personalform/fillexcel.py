@@ -14,7 +14,7 @@ from xlutils.copy import copy
 #   wb.save(fname)
 
 
-def fill_info_to_excel(fname, dict):
+def fill_info_to_excel(fname, dict, merged):
   rb = xlrd.open_workbook(fname)
   wb = copy(rb)
   ws = wb.get_sheet(0)

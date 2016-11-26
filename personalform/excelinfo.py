@@ -1,3 +1,4 @@
+# coding: utf8
 import xlwt
 import xlrd
 import demjson
@@ -32,8 +33,23 @@ def excel_to_python(fname, key):
   for i in range(len(row_list)):
       for j in range(len(row_list[0])):
         for k in range(len(key)):
-          m=str(row_list[i][0].encode('utf8'))+'_'+str(row_list[0][j].encode('utf8'))
-          print(m)
+          if isinstance(row_list[i][0], unicode):
+            str_i = row_list[i][0].encode('utf8')
+            pass
+          else:
+            str_i = str(row_list[i][0])
+          if isinstance(row_list[0][j], unicode):
+            str_j = row_list[0][j].encode('utf8')
+            pass
+          else:
+            str_j = str(row_list[0][j])
+          # if not isinstance(row_list[i][0], str):
+          #   m=str(row_list[i][0])+'_'+str(row_list[0][j])
+          #   pass
+          # else:
+          #   m=str(row_list[i][0].encode('utf8'))+'_'+str(row_list[0][j].encode('utf8'))
+          m = str_i + '_' + str_j
+          # print(m)
           if m == key[k][0]:
             row_list[i][j] = key[k][1]
 
@@ -51,6 +67,6 @@ def excel_to_python(fname, key):
   dict['cols_width'] = cols_width
   dict['rows_height'] = rows_height
   dict['merged'] = merged
-  print(dict)
+  # print(dict)
   json = demjson.encode(dict)
   return json
