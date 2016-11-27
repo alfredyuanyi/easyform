@@ -11,7 +11,7 @@ from django.core.exceptions import FieldDoesNotExist
 from personalform.models import *
 from personalform.forms import *
 import json
-from easyform.settings import MEDIA_URL, EXCEL_FILE, WORD_FILE
+from easyform.settings import MEDIA_URL, EXCEL_FILE, WORD_FILE, WEB_CRAWL
 from excelinfo import excel_to_python
 from common import *
 from fillexcel import *
@@ -178,7 +178,8 @@ def UploadForm(request, filetype):
 		    	file_path = MEDIA_URL + request.FILES['file'].name
 			handle_uploaded_file(request.FILES['file'], file_path)
 			user_data = get_user_data(username = request.user.username)
-			# print user_data
+			print 'user_data'
+			print user_data
 			excel_json = excel_to_python(fname=file_path, key = user_data)
 			print excel_json
 			return render(request, 
@@ -303,6 +304,35 @@ def updateinfo(request, filetype):
 				pass
 			create_and_update_word_field(username = request.user.username, word_data = worddata)
 			return HttpResponse('succeed')
+		elif filetype == WEB_CRAWL:
+			exceldata = []
+			
+			data = dict(request.POST)
+			# print data
+			lines = data['lines']
+			# print int(lines[0])
+			for x in xrange(0,int(lines[0])):
+				exceldata.append(data[str(x)])
+				pass
+			write_to_excel(request.POST['filepath'], exceldata)
+			
+			for line in xrange(1,int(lines[0])):
+				update_data = {}
+				# print line
+				for index in xrange(0,len(data['0'])):
+					if data['0'][index] != '':
+						update_data[data[str(line)][0] + '_' + data['0'][index]] = data[str(line)][index]
+						pass
+					else:
+						continue
+					pass
+				# print 'update_data: ', update_data
+				create_and_update_field(request.user.username, excel_data = update_data)
+				pass
+			
+			# update excel informations
+			return HttpResponse('succeed')			
+			pass
 		else:
 			return Http404
 		pass
@@ -337,7 +367,8 @@ def WebCrawl(request):
 			# url = request.POST['URL']
 			biglist = ahhhhhhh(url='url', admin='admin', password='admin')
 			m_context = demjson.encode(obj=biglist)
-			return render(request, template_name = 'web.html', context = {'data': m_context})
+			file_path = MEDIA_URL + 'test.xls'
+			return render(request, template_name = 'web.html', context = {'data': m_context, 'filepath': file_path})
 			pass
 		else:
 			return redirect(to = 'user/login/')
@@ -345,3 +376,4 @@ def WebCrawl(request):
 	else:
 		return HttpResponse('illigal request method')
 	pass
+

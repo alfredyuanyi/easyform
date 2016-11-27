@@ -138,3 +138,4 @@ MEDIA_URL = '/home/qingtian/workspace/python/django/easyform/personalform/media/
 
 EXCEL_FILE = 1
 WORD_FILE = 2
+WEB_CRAWL = 3

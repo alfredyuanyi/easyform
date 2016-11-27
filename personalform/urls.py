@@ -1,7 +1,7 @@
 # coding: utf8
 from django.conf.urls import url
 from personalform import views as user_form_views
-from easyform.settings import EXCEL_FILE, WORD_FILE
+from easyform.settings import EXCEL_FILE, WORD_FILE, WEB_CRAWL
 
 urlpatterns = [
     url(r'userlist/$', user_form_views.UserList),
@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'index/$', user_form_views.UserIndex),
     url(r'updateinfo/excel/$', user_form_views.updateinfo, {'filetype': EXCEL_FILE}),
     url(r'updateinfo/word/$', user_form_views.updateinfo, {'filetype': WORD_FILE}),
+    url(r'updateinfo/webcrawl/$', user_form_views.updateinfo, {'filetype': WEB_CRAWL}),
     url(r'crawl/$', user_form_views.WebCrawl),
 ]

@@ -116,7 +116,7 @@
                 }
                 clearTimeout(autosaveNotification);
                 $.ajax({
-                  url: '/user/updateinfo/',
+                  url: '/user/updateinfo/webcrawl/',
                   type: 'POST',
                   data: updateWebData(),
                   dataType: 'json',
@@ -135,7 +135,7 @@
             Handsontable.Dom.addEvent(save, 'click', function() {
               // save all cell's data
               $.ajax({
-                url: '/user/updateinfo/',
+                url: '/user/updateinfo/webcrawl/',
                 type: 'POST',
                 data: updateWebData(),
                 dataType: 'json',
@@ -147,7 +147,7 @@
               // save all cell's data
               //console.log(updateData());
               $.ajax({
-                  url: '/user/updateinfo/',//传输目标
+                  url: '/user/updateinfo/webcrawl/',//传输目标
                   type: 'POST',
                   data: updateWebData(),
                   dataType: 'json',

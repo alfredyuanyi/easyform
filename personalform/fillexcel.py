@@ -17,4 +17,10 @@ def fill_info_to_excel(fname, dict,merged):
     ws.write_merge(merged[i][0],merged[i][2]+merged[i][0]-1,merged[i][1],merged[i][1]+merged[i][3]-1,dict[merged[i][0]][merged[i][1]])
   wb.save(fname)
 
-
+def write_to_excel(fname,res):
+  filename = xlwt.Workbook()
+  sheet = filename.add_sheet("sheet1")
+  for i in range(len(res)):
+      for j in range(len(res[0])):
+        sheet.write(i,j,res[i][j])
+  filename.save(fname)

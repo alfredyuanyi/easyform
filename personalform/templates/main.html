@@ -13,6 +13,7 @@
     <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/static/js/semantic.min.js"></script>
     <script src="/static/js/handsontable.full.min.js"></script>
+    <script src="/static/js/dropzone.js"></script>
     <!-- <script src="/static/js/dropzone.js"></script> -->
 	<script>
    		$(window).scroll(function() {
@@ -97,7 +98,7 @@
             })
             $('#submitURL').click(function(){
                 $.ajax({
-                    url: "/crawl/",
+                    url: "",
                     method: "POST",
                     data: $('#URL').val(),
                     async: true,
@@ -109,30 +110,10 @@
             })
 		})
 	</script>
-    <script type="text/javascript">
-        var container = document.getElementById('table_example'),
-  hot;
-
-hot = new Handsontable(container, {
-  data: Handsontable.helper.createSpreadsheetData(9, 8),
-  colWidths: 50,
-  autoWrapRow: true,
-  rowHeaders: true,
-  colHeaders: true,
-  contextMenu: false,
-  manualColumnResize: true,
-  manualRowResize: true,
-  persistentState: true,
-  mergeCells: [
-    {row: 1, col: 1, rowspan: 3, colspan: 3},
-    {row: 3, col: 4, rowspan: 2, colspan: 2}
-  ]
-});
-    </script>
 </head>
 <body id="page" class="index pushable" ontouchstart>
 	<div class="pusher">
-		<div class="full height">
+		<div class="full height main">
 			<div class="following bar">
 				<div class="ui container">
 					<div class="ui large secondary inverted left network menu">
@@ -300,12 +281,11 @@ hot = new Handsontable(container, {
                     <form class="dropzone needsclick dz-clickable" id="my-awesome-dropzone1" enctype="multipart/form-data" action="/user/uploadform/excel/" method="post">
                     {% csrf_token %} 
                         <div class="dz-message needsclick">
-                            <i class="big inverted blue add circle icon"></i>
+                            <!-- <i class="big inverted blue add circle icon"></i> -->
                             <div class="ui divider hidden"></div>
-                            选择文件
-                            <input type="file" name="file" >
-                            <input type="submit" name="提交">
-                            拖拽文件上传或点击此处上传文档
+                            <input type="file" name="file" value="选择文件">
+                            <div class="ui divider hidden"></div>
+                            <input class="ui small primary button" type="submit" name="提交">
                         </div>
                     </form>
                 </div>
@@ -322,18 +302,16 @@ hot = new Handsontable(container, {
                     <p><i class="mini circular inverted grey icon">2</i>文档大小不要超过10MB</p>
                     <p><i class="mini circular inverted grey icon">3</i>老旧的浏览器版本可能不支持拖拽上传</p>
                     <div class="ui divider hidden"></div>
-                    <input class="ui primary button" type="button" name="" value="提交" onclick="document.getElementById('my-awesome-dropzone2').submit();">
                 </div>
                 <div class="ten wide column">
                     <form class="dropzone needsclick dz-clickable" id="my-awesome-dropzone2" enctype="multipart/form-data" action="/user/uploadform/word/" method="post">
                     {% csrf_token %} 
                         <div class="dz-message needsclick">
-                            <i class="big inverted blue add circle icon"></i>
+                            <!-- <i class="big inverted blue add circle icon"></i> -->
                             <div class="ui divider hidden"></div>
-                            选择文件
-                            <input type="file" name="file" >
-                            <input type="submit" name="提交">
-                            拖拽文件上传或点击此处上传文档
+                            <input type="file" name="file" value="选择文件">
+                            <div class="ui divider hidden"></div>
+                            <input class="ui small primary button" type="submit" name="提交">
                         </div>
                     </form>
                 </div>
@@ -362,6 +340,24 @@ hot = new Handsontable(container, {
             </div>
         </div>
     </div>
-    
+    <script type="text/javascript">
+        var container = document.getElementById('table_example'),
+  hot;
+        hot = new Handsontable(container, {
+          data: Handsontable.helper.createSpreadsheetData(9, 8),
+          colWidths: 50,
+          autoWrapRow: true,
+          rowHeaders: true,
+          colHeaders: true,
+          contextMenu: false,
+          manualColumnResize: true,
+          manualRowResize: true,
+          persistentState: true,
+          mergeCells: [
+            {row: 1, col: 1, rowspan: 3, colspan: 3},
+            {row: 3, col: 4, rowspan: 2, colspan: 2}
+          ]
+        });
+    </script>
 </body>
 </html>

@@ -6,7 +6,7 @@ import demjson
 
 def excel_to_python(fname, key):
   bk = xlrd.open_workbook(fname, formatting_info=True)
-
+  print 'qucoanima'
   try:
     sh = bk.sheet_by_name("Sheet1")
   except:
@@ -33,25 +33,12 @@ def excel_to_python(fname, key):
   for i in range(len(row_list)):
       for j in range(len(row_list[0])):
         for k in range(len(key)):
-          if isinstance(row_list[i][0], unicode):
-            str_i = row_list[i][0].encode('utf8')
-            pass
-          else:
-            str_i = str(row_list[i][0])
-          if isinstance(row_list[0][j], unicode):
-            str_j = row_list[0][j].encode('utf8')
-            pass
-          else:
-            str_j = str(row_list[0][j])
-          # if not isinstance(row_list[i][0], str):
-          #   m=str(row_list[i][0])+'_'+str(row_list[0][j])
-          #   pass
-          # else:
-          #   m=str(row_list[i][0].encode('utf8'))+'_'+str(row_list[0][j].encode('utf8'))
-          m = str_i + '_' + str_j
-          # print(m)
-          if m == key[k][0]:
+          m = key[k][0].split('_')
+          print 'm[0]: ', m[0]
+          print 'm[1]: ', m[1]
+          if (m[0] == row_list[i][0] and m[1] == row_list[0][j]):
             row_list[i][j] = key[k][1]
+            print 'row_list: ', row_list
 
   merged = []
   # for index in sh.merged_cells:
