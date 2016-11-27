@@ -3,22 +3,18 @@ import xlrd
 from xlutils.copy import copy
 
 
-# def fill_info_to_excel(fname, info_dict):
-#   rb = xlrd.open_workbook(fname)
-#   wb = copy(rb)
-#   ws = wb.get_sheet(0)
-#   for i in range(len(info_dict)):
-#       for j in range(len(info_dict[0])):
-#         print(i,j,info_dict[i][j])
-#         ws.write(i,j,info_dict[i][j])
-#   wb.save(fname)
 
 
-def fill_info_to_excel(fname, dict, merged):
+def fill_info_to_excel(fname, dict,merged):
   rb = xlrd.open_workbook(fname)
   wb = copy(rb)
   ws = wb.get_sheet(0)
   for i in range(len(dict)):
       for j in range(len(dict[0])):
         ws.write(i,j,dict[i][j])
+  for i in range(len(merged)):
+    print merged[i][0],merged[i][2]+merged[i][0],merged[i][1],merged[i][1]+merged[i][3],dict[merged[i][0]][merged[i][1]]
+    ws.write_merge(merged[i][0],merged[i][2]+merged[i][0]-1,merged[i][1],merged[i][1]+merged[i][3]-1,dict[merged[i][0]][merged[i][1]])
   wb.save(fname)
+
+

@@ -19,6 +19,7 @@
           _getData = [],
           _getMergedInfo = [],
           updateMerged = [],
+          updateMerged1 = [],
           _getColsWidth = [],
           _getRowsHeight = [],
           originalData = {% autoescape off %} {{ data }} {% endautoescape %};
@@ -31,6 +32,7 @@
                   }
                 }
             }else if (name === 'merged') {
+              updateMerged1 = originalData.merged;
               if (value.length) {
                 for(var i = 0; i < value.length; i++) {
                   _getMergedInfo[i] = {
@@ -72,7 +74,7 @@ function updateData(){
     var temp = {
         filepath: '{{ filepath }}',
         lines: hot1.countRows(),
-        merged:updateMerged
+        merged:updateMerged1
     }
     for(var i = 0;i < hot1.countRows(); i++){
         temp[i] = hot1.getDataAtRow([i]);

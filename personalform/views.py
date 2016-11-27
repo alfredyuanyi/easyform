@@ -1,5 +1,6 @@
 # coding: utf8
 
+import os
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User as AuthUser
 from django.contrib.auth import login,logout, authenticate
@@ -14,8 +15,12 @@ from easyform.settings import MEDIA_URL, EXCEL_FILE, WORD_FILE
 from excelinfo import excel_to_python
 from common import *
 from fillexcel import *
+from crawl import *
+import demjson
+# import simplejson
+
 #
-JAR_PATH = 'workspace/java/'
+JAR_PATH = '/home/qingtian/workspace/python/django/easyform/personalform/'
 JAR_NAME = 'Word.jar'
 
 def file_iterator(filename, chunk_size=512):
@@ -165,6 +170,8 @@ def handle_uploaded_file(f, filepath):
             destination.write(chunk)
 
 def UploadForm(request, filetype):
+    if not request.user.is_authenticated():
+        return redirect('/user/login/')
     if request.method == 'POST':
     	if filetype == EXCEL_FILE:
 			form = UploadFileForm(request.POST, request.FILES)
@@ -192,10 +199,16 @@ def UploadForm(request, filetype):
 			with open(JAR_PATH + 'middle.json', 'r') as f:
 				info += f.read()
 			word_info = json_class.decode(info)
+			# word_info = eval(info)
+			print 'word_info: '
+			print word_info
 			user_word_info = get_info_word(username = request.user.username, word_info = word_info)
+			print 'user_word_info: '
+			print user_word_info
+			# print user_word_info.keys()[0]
 			return render(request, 
 				template_name = 'word.html',
-				context = {'data': user_word_info, 'filepath': file_path})
+				context = {'data': json.dumps(user_word_info), 'filepath': file_path})
 			pass
 	else:
 			return Http404
@@ -224,14 +237,23 @@ def updateinfo(request, filetype):
 			exceldata = []
 			
 			data = dict(request.POST)
-			print data
+			# print data
 			lines = data['lines']
 			merged = data['merged']
+			tempdata =[]
+			for m in merged:
+				temp=[]
+				for x in m.split(','):
+					temp.append(int(x))
+					pass
+				tempdata.append(temp)
+				pass
+			print tempdata
 			# print int(lines[0])
 			for x in xrange(0,int(lines[0])):
 				exceldata.append(data[str(x)])
 				pass
-			fill_info_to_excel(request.POST['filepath'], exceldata, merged)
+			fill_info_to_excel(request.POST['filepath'], exceldata, tempdata)
 			
 			for line in xrange(1,int(lines[0])):
 				update_data = {}
@@ -252,8 +274,34 @@ def updateinfo(request, filetype):
 			pass
 		elif filetype == WORD_FILE:
 			# do something for word file update
-			worddata = dict(request.POST)
-			
+			tempdata = dict(request.POST)
+			lines = tempdata['lines']
+			print 'tempdata: ', tempdata
+			file_path = tempdata['filepath'][0]
+			worddata = {}
+			for line in xrange(0, int(lines[0])):
+				worddata[tempdata[str(line)][0]] = tempdata[str(line)][1]
+				pass
+			print 'worddata: '
+			print worddata
+			f_info = ''
+			with open(JAR_PATH + 'middle.json', 'r') as f_read:
+				f_info += f_read.read()
+			# json_class = json.JSONDecoder()
+			print 'f_info: ', f_info
+			f_data = json.loads(f_info)
+			print 'f_data:    ', f_data
+			jencode = json.JSONEncoder()
+			for key in f_data.keys():
+				f_data[key] = worddata[key]
+				pass
+			with open(JAR_PATH + 'middle.json', 'w') as f_write:
+				f_write.write(jencode.encode(f_data))
+			flag = os.system('cd ' + JAR_PATH + '&& ' + 'java -jar ' + JAR_NAME + ' "Write" "' + file_path + '"')
+			if flag != 0:
+				return HttpResponse("failed")
+				pass
+			create_and_update_word_field(username = request.user.username, word_data = worddata)
 			return HttpResponse('succeed')
 		else:
 			return Http404
@@ -282,3 +330,18 @@ def UserIndex(request):
 		return HttpResponse('illigal request method!')
         pass
 
+def WebCrawl(request):
+	if request.method == "POST":
+		request_user = request.user
+		if request_user.is_authenticated():
+			# url = request.POST['URL']
+			biglist = ahhhhhhh(url='url', admin='admin', password='admin')
+			m_context = demjson.encode(obj=biglist)
+			return render(request, template_name = 'web.html', context = {'data': m_context})
+			pass
+		else:
+			return redirect(to = 'user/login/')
+		pass
+	else:
+		return HttpResponse('illigal request method')
+	pass

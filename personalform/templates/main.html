@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
 	<meta charset="UTF-8">
 	<title>Document</title>
@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="/static/css/home.css">
     <link rel="stylesheet" href="/static/css/basic.css">
     <link rel="stylesheet" href="/static/css/dropzone.css">
+    <link rel="stylesheet" href="/static/css/handsontable.full.min.css">
     <script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="/static/js/semantic.min.js"></script>
+    <script src="/static/js/handsontable.full.min.js"></script>
     <!-- <script src="/static/js/dropzone.js"></script> -->
 	<script>
    		$(window).scroll(function() {
@@ -87,8 +89,46 @@
                     uplodeMultiple: false,
                 });
             })
+            $('#button3').click(function(){
+                $('.ui.modal.web')
+                .modal('scale')
+                .modal('show')
+                ;
+            })
+            $('#submitURL').click(function(){
+                $.ajax({
+                    url: "/crawl/",
+                    method: "POST",
+                    data: $('#URL').val(),
+                    async: true,
+                    success: function(){
+                        var successInfo = "<h4>上传成功</h4>"
+                        $('#URL').parent().append(successInfo);
+                    }
+                },1000)
+            })
 		})
 	</script>
+    <script type="text/javascript">
+        var container = document.getElementById('table_example'),
+  hot;
+
+hot = new Handsontable(container, {
+  data: Handsontable.helper.createSpreadsheetData(9, 8),
+  colWidths: 50,
+  autoWrapRow: true,
+  rowHeaders: true,
+  colHeaders: true,
+  contextMenu: false,
+  manualColumnResize: true,
+  manualRowResize: true,
+  persistentState: true,
+  mergeCells: [
+    {row: 1, col: 1, rowspan: 3, colspan: 3},
+    {row: 3, col: 4, rowspan: 2, colspan: 2}
+  ]
+});
+    </script>
 </head>
 <body id="page" class="index pushable" ontouchstart>
 	<div class="pusher">
@@ -143,12 +183,106 @@
 						<div class="ui hidden divider"></div>
 						<a class="ui huge inverted button" id="button1">上传Excel</a>
 						<a class="ui huge inverted button" id="button2">上传Word</a>
+                        <a class="ui huge inverted button" id="button3">页面获取</a>
 					</div>
 					<div class=""></div>
 				</div>
 			</div>
-			<div class="ui vertical stripe intro segment"></div>
+			<div class="ui vertical stripe intro segment">
+                <div class="ui stackable very relaxed center aligned grid container">
+                    <h1 class="ui header">常用信息保存管理 略去重复填写时间 </h1>
+                    <div class="ui center stackable aligned grid container">
+                        <div class="row">
+                            <div class="seven wide column">
+                                <h3 class="ui tagline">Excel文档处理</h3>
+                                <p>自动识别用户上传文档中的信息并保存。</p>
+                                <p>用户上传新文档时，自动检测并填写相似项的信息。</p>
+                                <p>用户可以自行修改Excel文本内容以及样式。</p>
+                                <p>每一次操作都会进行保存。</p>
+                            </div>
+                            <div class="nine wide column" style="overflow: hidden;height: 236px;width: 450px;">
+                                <div id="table_example" class="handsontable ui bottom attached segment" style="margin: auto;padding: 0;width: 450px;">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui divider"></div>
+                        <div class="row">
+                            <div class="seven wide column">
+                                <h3 class="ui tagline">Word文档处理</h3>
+                                <p>自动识别用户上传文档中的信息并保存。</p>
+                                <p>暂时只能识别一一对应的数据形式。</p>
+                                <p>用户上传新文档时，自动检测并填写相似项的信息。</p>
+                                <p>暂不支持用户自行修改Word样式。</p>
+                            </div>
+                            <div class="nine wide column">
+                                <table class="ui striped celled table" style="margin: auto;">
+                                  <thead>
+                                    <tr><th>标题</th>
+                                    <th>内容</th>
+                                    <th>注</th>
+                                  </tr></thead>
+                                  <tbody>
+                                    <tr id="table_title">
+                                      <td>
+                                        <div class="ui ribbon label">XX名单</div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>姓名
+                                      </td>
+                                      <td><div class="ui transparent input">
+                                            <input type="text" placeholder="待填项..." value="小明">
+                                          </div>
+                                      </td>
+                                      <td><div class="ui transparent input">
+                                            <input type="text" placeholder="待填项...">
+                                          </div>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>性别
+                                      </td>
+                                      <td><div class="ui transparent input">
+                                            <input type="text" placeholder="待填项..." value="男">
+                                          </div>
+                                      </td>
+                                      <td><div class="ui transparent input">
+                                            <input type="text" placeholder="待填项...">
+                                          </div>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 		</div>
+        <div class="ui black inverted vertical foot segment">
+            <div class="ui center aligned container">
+                <div class="ui stackable inverted grid">
+                    <div class="three wide column">
+                        <h4 class="ui inverted">页面</h4>
+                        <div class="ui inverted link list">
+                            <a class="item" href="#" target="blank_">主页</a>
+                            <a class="item" href="#" target="blank_">登录</a>
+                            <a class="item" href="#" target="blank_">注册</a>
+                            <a class="item" href="#" target="blank_">个人</a>
+                        </div>
+                    </div>
+                    <div class="seven wide right floated column">
+                            <h4 class="ui inverted teal">了解更多信息</h4>
+                            <p>了解关于此项目的更多信息。</p>
+                            <button class="ui disabled teal button">敬请期待...</button>
+                    </div>
+                </div>
+                <div class="ui inverted section divider"></div>
+                <div class="ui horizontal inverted small divided link list">
+                    <a class="item" href="#" target="blank_">版权信息</a>
+                </div>
+            </div>
+        </div>
 	</div>
     <div class="ui modal excel">
         <div id="dropz">
@@ -159,10 +293,12 @@
                     <p><i class="mini circular inverted grey icon">1</i>请上传.xls或xlsx格式的文档</p>
                     <p><i class="mini circular inverted grey icon">2</i>文档大小不要超过10MB</p>
                     <p><i class="mini circular inverted grey icon">3</i>老旧的浏览器版本可能不支持拖拽上传</p>
+                    <div class="ui divider hidden"></div>
+                    <input class="ui primary button" type="button" value="提交" onclick="document.getElementById('my-awesome-dropzone1').submit();">
                 </div>
                 <div class="ten wide column">
-                    <form class="dropzone needsclick dz-clickable" id="upload" enctype="multipart/form-data" action="/user/uploadform/excel/" method="post">
-                        {% csrf_token %} 
+                    <form class="dropzone needsclick dz-clickable" id="my-awesome-dropzone1" enctype="multipart/form-data" action="/user/uploadform/excel/" method="post">
+                    {% csrf_token %} 
                         <div class="dz-message needsclick">
                             <i class="big inverted blue add circle icon"></i>
                             <div class="ui divider hidden"></div>
@@ -185,9 +321,11 @@
                     <p><i class="mini circular inverted grey icon">1</i>请上传.doc或docx格式的文档</p>
                     <p><i class="mini circular inverted grey icon">2</i>文档大小不要超过10MB</p>
                     <p><i class="mini circular inverted grey icon">3</i>老旧的浏览器版本可能不支持拖拽上传</p>
+                    <div class="ui divider hidden"></div>
+                    <input class="ui primary button" type="button" name="" value="提交" onclick="document.getElementById('my-awesome-dropzone2').submit();">
                 </div>
                 <div class="ten wide column">
-                    <form class="dropzone needsclick dz-clickable" id="upload" enctype="multipart/form-data" action="/user/uploadform/word/" method="post">
+                    <form class="dropzone needsclick dz-clickable" id="my-awesome-dropzone2" enctype="multipart/form-data" action="/user/uploadform/word/" method="post">
                     {% csrf_token %} 
                         <div class="dz-message needsclick">
                             <i class="big inverted blue add circle icon"></i>
@@ -198,6 +336,28 @@
                             拖拽文件上传或点击此处上传文档
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui modal web">
+        <div id="webdrop">
+            <div class="ui grid">
+                <div class="six wide column">
+                    <h2>温馨提示</h2>
+                    <div class="ui divider hidden"></div>
+                    <p><i class="mini circular inverted grey icon">1</i>请输入完整网页URL</p>
+                    <!-- <p><i class="mini circular inverted grey icon">2</i></p>
+                    <p><i class="mini circular inverted grey icon">3</i></p> -->
+                </div>
+                <div class="ten wide column">
+                    <div class="ui action input">
+                    <form action="/user/crawl/" method="post">
+                   {% csrf_token %} 
+                        <input id="URL" type="text" placeholder="请输入目标网址..." value="" name="url">
+                        <input id="submitURL" type="submit" class="ui teal right labeled icon button" value="确定">
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

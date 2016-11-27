@@ -38,13 +38,30 @@ def create_and_update_field(username, excel_data):
 
 def get_info_word(username, word_info):
 	result_data = {}
-	for key in wordinfo.keys():
+	for key in word_info.keys():
+		# print key.encode('utf8')
+		# if isinstance(key, unicode):
+		# 	key = key.encode('utf8')
+		# 	print key
+		# 	pass
+		print key
 		try:
-			result_data[word_info[key]] = WordInfo.objects.get(username = username, word_field = word_info[key]).word_value
+			result_data[key] = WordInfo.objects.get(username = username, word_field = key).word_value
+			print 'get it'
 			pass
 		except WordInfo.DoesNotExist:
-			result_data[word_info[key]] = ''
+			print 'lose it'
+			result_data[key] = ''
 	return result_data
+	pass
+
+def create_and_update_word_field(username, word_data):
+	for field in word_data.keys():
+		obj, created = WordInfo.objects.update_or_create(
+			username = username,
+			word_field = field,
+			defaults = {'word_value': word_data[field]})
+		pass
 	pass
 
 

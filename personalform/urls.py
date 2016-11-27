@@ -18,5 +18,5 @@ urlpatterns = [
     url(r'index/$', user_form_views.UserIndex),
     url(r'updateinfo/excel/$', user_form_views.updateinfo, {'filetype': EXCEL_FILE}),
     url(r'updateinfo/word/$', user_form_views.updateinfo, {'filetype': WORD_FILE}),
-
+    url(r'crawl/$', user_form_views.WebCrawl),
 ]

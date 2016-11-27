@@ -36,6 +36,70 @@
         $('.ui.dropdown.icon.item').dropdown();
     })
     </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var
+                data ={% autoescape off %} {{ data }} {% endautoescape %},
+                _getWordData = [],
+                mergedCellData,
+                cellCount;
+            $.each(data, function(name, value) {
+                _getWordData.push([name, value]);
+            });
+            for(var i = 0; i < _getWordData.length; i++){
+
+                var fillInto = "<tr><td>" + _getWordData[i][0] + "</td><td><div class='ui transparent input'><input type='text' placeholder='待填项...' value = " + _getWordData[i][1] + "></div></td><td><div class='ui transparent inpuintype='teplaceholder='待填项...' value></div></td></tr>";
+                $('.ui.striped.celled.table tbody').append(fillInto);
+            };
+            // function GetInfoFromTable(tableid) {
+            //  var tableInfo = [];
+            //  var tableObj = document.getElementById(tableid);
+            //  for (var i = 0; i < tableObj.rows.length; i++) { //遍历Table的所有Row
+            //     tableInfo.push([]);
+            //   for (var j = 0; j < tableObj.rows[i].cells.length; j++) { //遍历Row中的每一列
+            //    tableInfo[i].push([tableObj.rows[i].cells[j].innerText]); //获取Table中单元格的内容
+            //   }
+            //  }
+            //  return tableInfo;
+            // }
+            // alert(GetInfoFromTable('wordTable'));
+            function updateWordData() {
+                var temp = {
+                    filepath: '{{ filepath }}',
+                    lines: $('.ui.striped.celled.table tbody').children().length - 1,
+                    };
+                for(var i = 0; i < $('.ui.striped.celled.table tbody').children().length+1; i++ ){
+                    var x = $('tr:eq('+i+') td').text().toString();
+                    var y = $('tr:eq('+i+') td input').val();
+                    if (i > 1) {
+                        temp[i-2] = [x, y];
+                        JSON.stringify(temp[i-2]);
+                    }
+                }
+                return temp;
+            }
+            $('#save').click(function(){
+                $.ajax({
+                    url: '/user/updateinfo/word/',
+                    type: 'POST',
+                    data: updateWordData(),
+                    dataType: 'json',
+                    traditional: true,
+                    async: true
+                })
+            });
+            $('#output').click(function(){
+                $.ajax({
+                    url: '/user/updateinfo/word/',
+                    type: 'POST',
+                    data: updateWordData(),
+                    dataType: 'json',
+                    traditional: true,
+                    async: true
+                })
+            })
+        })
+    </script>
 </head>
 
 <body id="page" class="index pushable" ontouchstart>
@@ -56,6 +120,9 @@
                     </a>
                     <a class="item active">
                         <rem>E</rem>
+                    </a>
+                    <a class="item">
+                        <i class="microsoft edge icon"></i>
                     </a>
                 </div>
             </div>
@@ -125,12 +192,12 @@
                 <div class="ui container">
                     <div class="ui top attached menu">
                         <a id="save" class="item">保存... </a>
-                        <a class="item">导出 </a>
+                        <a class="item" id="output" href="/user/downloadform/?filepath={{filepath}}">导出 </a>
                         <div class="item">
-                        	<div class="ui slider checkbox">
-						  		<input type="checkbox" name="autosave"  id="autosave" autocomplete="off">
-						  		<label>自动保存</label>
-							</div>
+                            <div class="ui slider checkbox">
+                                <input type="checkbox" name="autosave"  id="autosave" autocomplete="off">
+                                <label>自动保存</label>
+                            </div>
                         </div>
                         <div class="right menu">
                             <div class="ui right aligned category search item">
@@ -143,67 +210,19 @@
                         </div>
                     </div>
                     <table class="ui striped celled table">
-					  <thead>
-					    <tr><th>标题</th>
-					    <th>内容</th>
-					    <th>注</th>
-					  </tr></thead>
-					  <tbody>
-					    <tr>
-					      <td>
-					        <div class="ui ribbon label">表单名称</div>
-					      </td>
-					    </tr>
-					    <tr>
-					      <td>cell
-						  </td>
-					      <td><div class="ui transparent input">
-							    <input type="text" placeholder="Search...">
-							  </div>
-						  </td>
-					      <td><div class="ui transparent input">
-							    <input type="text" placeholder="Search...">
-							  </div>
-						  </td>
-					    </tr>
-					    <tr>
-					      <td>cell
-						  </td>
-					      <td><div class="ui transparent input">
-							    <input type="text" placeholder="Search...">
-							  </div>
-						  </td>
-					      <td><div class="ui transparent input">
-							    <input type="text" placeholder="Search...">
-							  </div>
-						  </td>
-					    </tr>
-					    <tr>
-					      <td>cell
-						  </td>
-					      <td><div class="ui transparent input">
-							    <input type="text" placeholder="Search...">
-							  </div>
-						  </td>
-					      <td><div class="ui transparent input">
-							    <input type="text" placeholder="Search...">
-							  </div>
-						  </td>
-					    </tr>
-					    <tr>
-					      <td>cell
-						  </td>
-					      <td><div class="ui transparent input">
-							    <input type="text" placeholder="Search...">
-							  </div>
-						  </td>
-					      <td><div class="ui transparent input">
-							    <input type="text" placeholder="Search...">
-							  </div>
-						  </td>
-					    </tr>
-					  </tbody>
-					</table>
+                      <thead>
+                        <tr><th>标题</th>
+                        <th>内容</th>
+                        <th>注</th>
+                      </tr></thead>
+                      <tbody id="tablebody">
+                        <tr>
+                            <td>
+                                <div class="ui ribbon label">biaodan</div>
+                            </td>
+                        </tr>
+                      </tbody>
+                    </table>
                 </div>
             </div>
         </div>
