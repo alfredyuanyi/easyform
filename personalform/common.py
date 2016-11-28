@@ -44,13 +44,13 @@ def get_info_word(username, word_info):
 		# 	key = key.encode('utf8')
 		# 	print key
 		# 	pass
-		print key
+		# print key
 		try:
 			result_data[key] = WordInfo.objects.get(username = username, word_field = key).word_value
-			print 'get it'
+			# print 'get it'
 			pass
 		except WordInfo.DoesNotExist:
-			print 'lose it'
+			# print 'lose it'
 			result_data[key] = ''
 	return result_data
 	pass

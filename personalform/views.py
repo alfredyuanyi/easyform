@@ -178,10 +178,10 @@ def UploadForm(request, filetype):
 		    	file_path = MEDIA_URL + request.FILES['file'].name
 			handle_uploaded_file(request.FILES['file'], file_path)
 			user_data = get_user_data(username = request.user.username)
-			print 'user_data'
-			print user_data
+			# print 'user_data'
+			# print user_data
 			excel_json = excel_to_python(fname=file_path, key = user_data)
-			print excel_json
+			# print excel_json
 			return render(request, 
 				template_name = 'excel.html',
 				context = {'data': excel_json, 'filepath': file_path})    	
@@ -201,11 +201,11 @@ def UploadForm(request, filetype):
 				info += f.read()
 			word_info = json_class.decode(info)
 			# word_info = eval(info)
-			print 'word_info: '
-			print word_info
+			# print 'word_info: '
+			# print word_info
 			user_word_info = get_info_word(username = request.user.username, word_info = word_info)
-			print 'user_word_info: '
-			print user_word_info
+			# print 'user_word_info: '
+			# print user_word_info
 			# print user_word_info.keys()[0]
 			return render(request, 
 				template_name = 'word.html',
@@ -240,7 +240,12 @@ def updateinfo(request, filetype):
 			data = dict(request.POST)
 			# print data
 			lines = data['lines']
-			merged = data['merged']
+			try:
+				merged = data['merged']
+				pass
+			except KeyError:
+				merged = []
+			
 			tempdata =[]
 			for m in merged:
 				temp=[]
@@ -249,7 +254,7 @@ def updateinfo(request, filetype):
 					pass
 				tempdata.append(temp)
 				pass
-			print tempdata
+			# print tempdata
 			# print int(lines[0])
 			for x in xrange(0,int(lines[0])):
 				exceldata.append(data[str(x)])
@@ -277,7 +282,7 @@ def updateinfo(request, filetype):
 			# do something for word file update
 			tempdata = dict(request.POST)
 			lines = tempdata['lines']
-			print 'tempdata: ', tempdata
+			# print 'tempdata: ', tempdata
 			file_path = tempdata['filepath'][0]
 			worddata = {}
 			for line in xrange(0, int(lines[0])):
@@ -308,28 +313,33 @@ def updateinfo(request, filetype):
 			exceldata = []
 			
 			data = dict(request.POST)
-			# print data
+			print data
 			lines = data['lines']
 			# print int(lines[0])
 			for x in xrange(0,int(lines[0])):
 				exceldata.append(data[str(x)])
 				pass
+			# print 'exceldata: ', exceldata
 			write_to_excel(request.POST['filepath'], exceldata)
-			
-			for line in xrange(1,int(lines[0])):
-				update_data = {}
-				# print line
-				for index in xrange(0,len(data['0'])):
-					if data['0'][index] != '':
-						update_data[data[str(line)][0] + '_' + data['0'][index]] = data[str(line)][index]
-						pass
-					else:
-						continue
+			update_data = {}
+			for line in xrange(0, int(lines[0])):
+				for l_info in data[str(line)]:
+					update_data[l_info[0]] = l_info[1]
 					pass
-				# print 'update_data: ', update_data
-				create_and_update_field(request.user.username, excel_data = update_data)
+			# for line in xrange(1,int(lines[0])):
+			# 	update_data = {}
+			# 	# print line
+			# 	for index in xrange(0,len(data['0'])):
+			# 		if data['0'][index] != '':
+			# 			update_data[data[str(line)][0] + '_' + data['0'][index]] = data[str(line)][index]
+			# 			pass
+			# 		else:
+			# 			continue
+			# 		pass
+				
 				pass
-			
+			print 'update_data: ', update_data
+			create_and_update_field(request.user.username, excel_data = update_data)
 			# update excel informations
 			return HttpResponse('succeed')			
 			pass

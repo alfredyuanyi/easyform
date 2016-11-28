@@ -6,7 +6,7 @@ import demjson
 
 def excel_to_python(fname, key):
   bk = xlrd.open_workbook(fname, formatting_info=True)
-  print 'qucoanima'
+  # print 'qucoanima'
   try:
     sh = bk.sheet_by_name("Sheet1")
   except:
@@ -34,11 +34,11 @@ def excel_to_python(fname, key):
       for j in range(len(row_list[0])):
         for k in range(len(key)):
           m = key[k][0].split('_')
-          print 'm[0]: ', m[0]
-          print 'm[1]: ', m[1]
+          # print 'm[0]: ', m[0]
+          # print 'm[1]: ', m[1]
           if (m[0] == row_list[i][0] and m[1] == row_list[0][j]):
             row_list[i][j] = key[k][1]
-            print 'row_list: ', row_list
+            # print 'row_list: ', row_list
 
   merged = []
   # for index in sh.merged_cells:
