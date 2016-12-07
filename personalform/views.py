@@ -11,7 +11,7 @@ from django.core.exceptions import FieldDoesNotExist
 from personalform.models import *
 from personalform.forms import *
 import json
-from easyform.settings import MEDIA_URL, EXCEL_FILE, WORD_FILE, WEB_CRAWL, MEIDA_ROOT
+from easyform.settings import MEDIA_URL, EXCEL_FILE, WORD_FILE, WEB_CRAWL, MEDIA_ROOT
 from excelinfo import excel_to_python
 from common import *
 from fillexcel import *
@@ -20,7 +20,7 @@ import demjson
 # import simplejson
 
 #
-JAR_PATH = '/home/qingtian/workspace/python/django/easyform/personalform/'
+JAR_PATH = MEDIA_ROOT
 JAR_NAME = 'Word.jar'
 
 def file_iterator(filename, chunk_size=512):
@@ -175,7 +175,7 @@ def UploadForm(request, filetype):
     if request.method == 'POST':
     	if filetype == EXCEL_FILE:
 			form = UploadFileForm(request.POST, request.FILES)
-		    	file_path = os.path.join(MEIDA_ROOT) + request.FILES['file'].name
+		    	file_path = MEDIA_ROOT + request.FILES['file'].name
 			handle_uploaded_file(request.FILES['file'], file_path)
 			user_data = get_user_data(username = request.user.username)
 			# print 'user_data'
@@ -189,7 +189,7 @@ def UploadForm(request, filetype):
     	elif filetype == WORD_FILE:
     		# do something for word file
 		    	form = UploadFileForm(request.POST, request.FILES)
-		    	file_path = os.path.join(MEIDA_ROOT) + request.FILES['file'].name
+		    	file_path = MEDIA_ROOT + request.FILES['file'].name
 			handle_uploaded_file(request.FILES['file'], file_path)
 			flag = os.system('cd ' + JAR_PATH + '&& ' + 'java -jar ' + JAR_NAME + ' "Read" "' + file_path.encode('utf8') + '"')
 			if flag != 0:
